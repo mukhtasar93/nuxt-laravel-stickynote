@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PostResource;
-use App\Models\Post;
+use App\Http\Resources\NoteResource;
+use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PostController extends Controller
+class NoteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return new PostResource(Post::all());
+        return new NoteResource(Note::all());
     }
 
     /**
@@ -43,20 +43,20 @@ class PostController extends Controller
         }
         
         //save to database
-        $post = Post::create([
+        $note = Note::create([
             'title' => $request ->title,
             'content' => $request ->content
         ]);
 
-        return new PostResource($post);
+        return new NoteResource($note);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Note $note)
     {
-        return new PostResource($post);
+        return new NoteResource($note);
     }
 
     /**
@@ -70,7 +70,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Note $note)
     {
         //set validation
         $validator = Validator::make($request->all(), [
@@ -84,21 +84,21 @@ class PostController extends Controller
         }
 
         //update to database
-        $post->update([
+        $note->update([
             'title'     => $request->title,
             'content'   => $request->content
         ]);
 
-        return new PostResource($post);
+        return new NoteResource($note);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Note $note)
     {
-        $post->delete();
+        $note->delete();
         
-        return new PostResource($post);
+        return new NoteResource($note);
     }
 }

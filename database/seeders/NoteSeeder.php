@@ -6,14 +6,14 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class PostSeeder extends Seeder
+class NoteSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('posts')->insert([
+        DB::table('notes')->insert([
             [
                 'title' => 'Note Title 1',
                 'content' => 'Content 1, Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium modi totam excepturi laboriosam, voluptas nostrum sequi quibusdam sint eligendi distinctio.'
