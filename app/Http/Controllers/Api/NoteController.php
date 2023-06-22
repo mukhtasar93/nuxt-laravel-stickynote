@@ -10,94 +10,134 @@ use Illuminate\Support\Facades\Validator;
 
 class NoteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return new NoteResource(Note::all());
+        $notes = Note::all();
+        if($notes->count() > 0){
+        return response()->json([
+            'status' => 200,
+            'notes' => $notes
+        ], 200);
+    } else {
+        return response()->json([
+            'status' => 404,
+            'notes' => 'No Records Found.'
+        ], 404);
+
+    }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // create validation
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'content' => 'required',
         ]);
 
-        //respon error validation
         if ($validator->fails()){
             return response()->json($validator->errors(), 400);
         }
-        
-        //save to database
+
         $note = Note::create([
             'title' => $request ->title,
             'content' => $request ->content
         ]);
 
-        return new NoteResource($note);
+        if($note){
+            return response()->json([
+                'status' => 200,
+                'message' => "Note Created Successfully."
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 500,
+                'message' => "Something Went Wrong."
+            ], 500);
+        }
+
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Note $note)
+    public function show($id)
     {
-        return new NoteResource($note);
+        $note = Note::find($id);
+        if($note){
+            return response()->json([
+                'status' => 200,
+                'student' => $note
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => "No Sucuh Note Found."
+            ], 404);
+        }
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $note = Note::find($id);
+        if($note){
+            return response()->json([
+                'status' => 200,
+                'note' => $note
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => "No Sucuh Note Found."
+            ], 404);
+        }
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Note $note)
+    public function update(Request $request, int $id)
     {
-        //set validation
         $validator = Validator::make($request->all(), [
-            'title'   => 'required',
+            'title' => 'required',
             'content' => 'required',
         ]);
 
-        //response error validation
-        if ($validator->fails()) {
+        if ($validator->fails()){
             return response()->json($validator->errors(), 400);
         }
-
-        //update to database
-        $note->update([
-            'title'     => $request->title,
-            'content'   => $request->content
+        
+        $note = Note::find($id);
+        
+        if($note){
+            $note->update([
+            'title' => $request->title,
+            'content' => $request->content
         ]);
+            return response()->json([
+                'status' => 200,
+                'message' => "Note Updated Successfully."
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 500,
+                'message' => "No Sucuh Note Found."
+            ], 500);
+        }
 
-        return new NoteResource($note);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Note $note)
+    public function destroy($id)
     {
-        $note->delete();
+        $note = Note::find($id);
+        if($note){
+            $note->delete();
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => "No Sucuh Note Found."
+            ], 404);
+        }
         
         return new NoteResource($note);
     }
